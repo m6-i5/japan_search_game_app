@@ -1,2 +1,3 @@
 # japan_search_game_app
-a web app of card game (concentration a.k.a. Shinkei-Suijaku) with japan search contents.
+2020UDC京都 in NDL関西館 ジャパンサーチタウンにて作成．
+ジャパンサーチのコンテンツを使った神経衰弱ゲームアプリのためのサンドボックス．
