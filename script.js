@@ -174,9 +174,9 @@ function modify_modal(selids, matchs){
   var result_info = document.getElementById('result-info'); // 結果詳細
   
   if(matchs.length==2){ // 属性値一致
-    result_text.innerHTML = '<span class="font-weight-bold text-danger">○</span> あたり'
+    result_text.innerHTML = '<span class="font-weight-bold text-danger">○</span> あたり';
   }else{ // 属性値不一致
-    result_text.innerHTML = '<span class="font-weight-bold text-primary">×</span> はずれ'
+    result_text.innerHTML = '<span class="font-weight-bold text-primary">×</span> はずれ';
   }
   
   // 結果詳細の初期化
@@ -237,7 +237,7 @@ function modify_modal_info(cont_dat){
   // URL情報を追加
   var att_row = document.createElement('li');
   att_row.setAttribute('class', 'list-group-item bg-light');
-  att_row.innerHTML = '<a href="' + cont_dat.url + '" target="_blank">ジャパンサーチリンク</a>';
+  att_row.innerHTML = '<a href="' + cont_dat.url + '" target="_blank" rel="noopener noreferrer">ジャパンサーチリンク</a>';
   atts_list.appendChild(att_row);
   
   cont_card.appendChild(atts_list);
