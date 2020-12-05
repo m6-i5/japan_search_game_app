@@ -4,6 +4,7 @@ var card_list; // コンテンツカードのリスト
 var selected_list; // 選択状態のコンテンツidのリスト
 var match_list; // 属性値が一致したコンテンツidのリスト
 var tgt_att; // 一致をチェックする属性のキー
+var all_clear; // 全正解状態
 
 function get_randint(max){
   // 正数乱数を返す
@@ -59,34 +60,42 @@ function make_demo_data_0(){
     {// 0
       'img_url': 'https://colbase.nich.go.jp/media/tnm/A-10569-685/image/slideshow_s/A-10569-685_C0034988.jpg',
       'title': '冨嶽三十六景・神奈川沖浪裏', 'atts': {'作者': '葛飾北斎', '時代': '江戸時代', '所蔵': '東京国立博物館'},
+      'url': 'https://jpsearch.go.jp/item/cobas-49296',
     },
     {// 1
       'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_00623_01.jpg',
       'title': '東海道五十三次　絵本駅路鈴', 'atts': {'作者': '葛飾北斎', '時代': '江戸時代', '所蔵': '東京富士美術館'},
+      'url': 'https://jpsearch.go.jp/item/tfam_art_db-623',
     },
     {// 2
       'img_url': 'https://colbase.nich.go.jp/media/tnm/A-10569-7024/image/slideshow_s/A-10569-7024_C0004335.jpg',
       'title': '日本湊盡・長州下ノ関', 'atts': {'作者': '歌川広重', '時代': '江戸時代', '所蔵': '東京国立博物館'},
+      'url': 'https://jpsearch.go.jp/item/cobas-55484',
     },
     {// 3
       'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_04336.jpg',
       'title': '東海道五拾三次之内　蒲原 夜之雪', 'atts': {'作者': '歌川広重', '時代': '江戸時代', '所蔵': '東京富士美術館'},
+      'url': 'https://jpsearch.go.jp/item/tfam_art_db-4336',
     },
     {// 4
       'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_09801.jpg',
       'title': 'みかけハこハゐがとんだいゝ人だ', 'atts': {'作者': '歌川国芳', '時代': '江戸時代', '所蔵': '東京富士美術館'},
+      'url': 'https://jpsearch.go.jp/item/tfam_art_db-9801',
     },
     {// 5
       'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_09112.jpg',
       'title': '鬼若力之助', 'atts': {'作者': '歌川国芳','時代': '江戸時代', '所蔵': '東京富士美術館'},
+      'url': 'https://jpsearch.go.jp/item/tfam_art_db-9112',
     },
     {// 6
       'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_06513.jpg',
       'title': '神洲第一峰', 'atts': {'作者': '横山大観', '時代': '昭和時代', '所蔵': '東京富士美術館'},
+      'url': 'https://jpsearch.go.jp/item/tfam_art_db-6513',
     },
     {// 7
       'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_06551.jpg',
       'title': '夜桜（花）', 'atts': {'作者': '横山大観', '時代': '昭和時代', '所蔵': '東京富士美術館'},
+      'url': 'https://jpsearch.go.jp/item/tfam_art_db-6551',
     },
   ];
   return ret;
@@ -199,13 +208,50 @@ function modify_modal(selids, matchs){
   }
 }
 
+function modify_modal_info(cont_dat){
+  // モーダルの編集 (全正解後データ)
+  
+  var result_text = document.getElementById('result-text'); // 結果テキスト
+  var result_info = document.getElementById('result-info'); // 結果詳細
+  
+  result_text.innerHTML = '';
+  
+  // 結果詳細の初期化
+  while (result_info.firstChild) result_info.removeChild(result_info.firstChild);
+  
+  // コンテンツについて結果詳細カードを作る
+  var cont_card = make_card(cont_dat); // コンテンツカード
+  cont_card.setAttribute('style', 'width: 40%; display: inline-block'); // カードスタイル
+  
+  // カードに属性データを追加
+  var atts_list = document.createElement('ul');
+  atts_list.setAttribute('class', 'list-group list-group-flush');
+  for(let j=0; j<Object.keys(cont_dat.atts).length; j++){
+    var att_k = Object.keys(cont_dat.atts)[j];
+    var att_row = document.createElement('li');
+    att_row.setAttribute('class', 'list-group-item bg-light');
+    att_row.innerHTML = att_k+' : '+cont_dat.atts[att_k];
+    atts_list.appendChild(att_row);
+  }
+  
+  // URL情報を追加
+  var att_row = document.createElement('li');
+  att_row.setAttribute('class', 'list-group-item bg-light');
+  att_row.innerHTML = '<a href="' + cont_dat.url + '" target="_blank">ジャパンサーチリンク</a>';
+  atts_list.appendChild(att_row);
+  
+  cont_card.appendChild(atts_list);
+  
+  result_info.appendChild(cont_card);
+}
+
 function make_card(data){
   // カードを作成
   var card = document.createElement('div');
   card.setAttribute('class', 'card content-card m-1 bg-light');
   
   var img = document.createElement('img');
-  img.setAttribute('class', 'bd-placeholder-img card-img-top bg-dark');
+  img.setAttribute('class', 'bd-placeholder-img card-img-top light');
   img.setAttribute('src', data.img_url);
   //img.setAttribute('style', 'width: 100%; max-height: 200px;');
   img.setAttribute('style', 'max-height: 200px; object-fit: contain;');
@@ -235,59 +281,62 @@ function make_card_obj(data){
   
   // カードにクリックイベントを追加
   card.onclick = function(){
-    // すでに正解したコンテンツカードの場合は何もしない
-    if(match_list.indexOf(this.id)!=-1){
-      return;
-    }
-    
-    // 選択状態の視覚効果ON/OFF
-    // 選択リストの更新
-    this.classList.toggle('border-primary');
-    if(selected_list.indexOf(this.id)==-1){
-      this.style.borderWidth = '3px';
-      selected_list.push(this.id);
-    }else{
-      this.style.borderWidth = '';
-      selected_list.splice(selected_list.indexOf(this.id), 1);
-    }
-    
-    // console.log(selected_list.length);
-    // 2枚目を選択したとき
-    if(selected_list.length==2){
-      // 選択コンテンツのインデックスリスト
-      var selids = [];
-      for(let i=0; i<selected_list.length; i++){
-        selids.push(Number(selected_list[i].slice(1,2)));
-      }
-      // console.log(selids);
-      
-      // 選択コンテンツの属性値一致チェック
-      matchs = check_matching(selids);
-      // console.log(matchs);
-      
-      // 結果モーダル編集
-      modify_modal(selids, matchs);
-      // 結果モーダル表示
+    if(all_clear){ // 全正解しているとき
+      modify_modal_info(cont_list[Number(this.id.slice(1,2))]);
       $('#result-modal').modal('toggle');
-      
-      
-      if(matchs.length==2){ // 選択コンテンツの属性値一致
-        // 選択状態の解除
-        for(let i=0; i<selids.length; i++){
-          card_list[selids[i]].classList.toggle('border-primary');
-          card_list[selids[i]].classList.toggle('border-warning');
-          match_list.push(card_list[selids[i]].id);
-        }
-      }else{ // 選択コンテンツの属性値不一致
-        // 選択状態の解除
-        for(let i=0; i<selids.length; i++){
-          card_list[selids[i]].classList.toggle('border-primary');
-          card_list[selids[i]].style.borderWidth = '';
-        }
+    }else if(match_list.indexOf(this.id)==-1){ // 正解してないのコンテンツカードに対してのみ
+      // 選択状態の視覚効果ON/OFF
+      // 選択リストの更新
+      this.classList.toggle('border-primary');
+      if(selected_list.indexOf(this.id)==-1){
+        this.style.borderWidth = '8px';
+        selected_list.push(this.id);
+      }else{
+        this.style.borderWidth = '';
+        selected_list.splice(selected_list.indexOf(this.id), 1);
       }
-      selected_list = [];
       
+      // console.log(selected_list.length);
+      // 2枚目を選択したとき
+      if(selected_list.length==2){
+        // 選択コンテンツのインデックスリスト
+        var selids = [];
+        for(let i=0; i<selected_list.length; i++){
+          selids.push(Number(selected_list[i].slice(1,2)));
+        }
+        // console.log(selids);
+        
+        // 選択コンテンツの属性値一致チェック
+        matchs = check_matching(selids);
+        // console.log(matchs);
+        
+        // 結果モーダル編集
+        modify_modal(selids, matchs);
+        // 結果モーダル表示
+        $('#result-modal').modal('toggle');
+        
+        if(matchs.length==2){ // 選択コンテンツの属性値が一致したとき
+          // 選択状態の解除
+          for(let i=0; i<selids.length; i++){
+            card_list[selids[i]].classList.toggle('border-primary');
+            card_list[selids[i]].classList.toggle('border-warning');
+            match_list.push(card_list[selids[i]].id);
+          }
+          
+          if(match_list.length==num_cards()){
+            all_clear = true;
+          }
+        }else{ // 選択コンテンツの属性値が不一致のとき
+          // 選択状態の解除
+          for(let i=0; i<selids.length; i++){
+            card_list[selids[i]].classList.toggle('border-primary');
+            card_list[selids[i]].style.borderWidth = '';
+          }
+        }
+        selected_list = [];
+      }
     }
+    
   };
   
   return card;
@@ -302,6 +351,7 @@ function place_cards(){
   selected_list = []; // 選択状態のコンテンツidのリスト
   match_list = []; // 属性値が一致したコンテンツidのリスト
   tgt_att = get_tgt_att(); // 一致をチェックする属性のキー
+  all_clear = false; // 全正解状態
   
   // カード置き場
   var playyard = document.getElementById('playyard');
