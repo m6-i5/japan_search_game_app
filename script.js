@@ -54,6 +54,45 @@ function make_dummy_dataset(num){
   return ret;
 }
 
+function make_demo_data_0(){
+  var ret = [
+    {// 0
+      'img_url': 'https://colbase.nich.go.jp/media/tnm/A-10569-685/image/slideshow_s/A-10569-685_C0034988.jpg',
+      'title': '冨嶽三十六景・神奈川沖浪裏', 'atts': {'作者': '葛飾北斎', '時代': '江戸時代', '所蔵': '東京国立博物館'},
+    },
+    {// 1
+      'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_00623_01.jpg',
+      'title': '東海道五十三次　絵本駅路鈴', 'atts': {'作者': '葛飾北斎', '時代': '江戸時代', '所蔵': '東京富士美術館'},
+    },
+    {// 2
+      'img_url': 'https://colbase.nich.go.jp/media/tnm/A-10569-7024/image/slideshow_s/A-10569-7024_C0004335.jpg',
+      'title': '日本湊盡・長州下ノ関', 'atts': {'作者': '歌川広重', '時代': '江戸時代', '所蔵': '東京国立博物館'},
+    },
+    {// 3
+      'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_04336.jpg',
+      'title': '東海道五拾三次之内　蒲原 夜之雪', 'atts': {'作者': '歌川広重', '時代': '江戸時代', '所蔵': '東京富士美術館'},
+    },
+    {// 4
+      'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_09801.jpg',
+      'title': 'みかけハこハゐがとんだいゝ人だ', 'atts': {'作者': '歌川国芳', '時代': '江戸時代', '所蔵': '東京富士美術館'},
+    },
+    {// 5
+      'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_09112.jpg',
+      'title': '鬼若力之助', 'atts': {'作者': '歌川国芳','時代': '江戸時代', '所蔵': '東京富士美術館'},
+    },
+    {// 6
+      'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_06513.jpg',
+      'title': '神洲第一峰', 'atts': {'作者': '横山大観', '時代': '昭和時代', '所蔵': '東京富士美術館'},
+    },
+    {// 7
+      'img_url': 'https://www.fujibi.or.jp/assets/images/collection/thumb_c/thumb_c_06551.jpg',
+      'title': '夜桜（花）', 'atts': {'作者': '横山大観', '時代': '昭和時代', '所蔵': '東京富士美術館'},
+    },
+  ];
+  return ret;
+  
+}
+
 function fy_shuffle(arr){
   // Fisher-Yatesによる配列シャッフル
   
@@ -76,6 +115,12 @@ function num_cards(){
   // カード枚数
   
   return Number(document.getElementById('num_cards').value);
+}
+
+function get_tgt_att(){
+  // マッチング対象の属性キー
+  
+  return document.getElementById('tgt_att').value;
 }
 
 function check_matching(selids){
@@ -160,14 +205,15 @@ function make_card(data){
   card.setAttribute('class', 'card content-card m-1 bg-light');
   
   var img = document.createElement('img');
-  img.setAttribute('class', 'bd-placeholder-img card-img-top');
+  img.setAttribute('class', 'bd-placeholder-img card-img-top bg-dark');
   img.setAttribute('src', data.img_url);
-  img.setAttribute('style', 'width: 100%;');
+  //img.setAttribute('style', 'width: 100%; max-height: 200px;');
+  img.setAttribute('style', 'max-height: 200px; object-fit: contain;');
   
   var cbody = document.createElement('div');
   cbody.setAttribute('class', 'card-body p-2');
   
-  var ctitle = document.createElement('h5');
+  var ctitle = document.createElement('h6');
   ctitle.setAttribute('class', 'card-title m-1');
   ctitle.innerHTML = data.title;
   
@@ -255,7 +301,7 @@ function place_cards(){
   card_list = []; // コンテンツカードのリスト
   selected_list = []; // 選択状態のコンテンツidのリスト
   match_list = []; // 属性値が一致したコンテンツidのリスト
-  tgt_att = 'att1'; // 一致をチェックする属性のキー
+  tgt_att = get_tgt_att(); // 一致をチェックする属性のキー
   
   // カード置き場
   var playyard = document.getElementById('playyard');
@@ -264,7 +310,8 @@ function place_cards(){
   while (playyard.firstChild) playyard.removeChild(playyard.firstChild);
   
   // コンテンツデータのリスト
-  cont_list = make_dummy_dataset(num_cards());
+  //cont_list = make_dummy_dataset(num_cards());
+  cont_list = make_demo_data_0();
   
   // コンテンツデータをシャッフルして
   cont_list = fy_shuffle(cont_list);

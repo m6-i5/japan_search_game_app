@@ -14,18 +14,30 @@
   <body class="bg-secondary">
     <div id="top">
       <div id="menu" class="p-3 border border-primary bg-light">
-        <label>カード枚数</label>
-        <select id="num_cards" class="form-control">
-          <option>8</option>
-          <option>16</option>
-          <option>32</option>
-        </select>
+        <div class='form-row'>
+          <div class='col'>
+            <label>カード枚数</label>
+            <select id="num_cards" class="form-control">
+              <option>8</option>
+              <option>16</option>
+              <option>32</option>
+            </select>
+          </div>
+          <div class='col'>
+            <label>マッチングターゲット</label>
+            <select id="tgt_att" class="form-control">
+              <option>作者</option>
+              <option>時代</option>
+              <option>所蔵</option>
+            </select>
+          </div>
+        </div>
         <button id="start" class="mt-3 btn btn-primary" onClick="place_cards();">スタート</button>
       </div>
     </div>
     
     <div id="result-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h2 id="result-text" class="modal-title"></h2>
