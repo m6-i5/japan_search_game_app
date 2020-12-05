@@ -128,10 +128,13 @@ function modify_modal(selids, matchs){
   // 結果詳細の初期化
   while (result_info.firstChild) result_info.removeChild(result_info.firstChild);
   
+  // 選択したコンテンツについて結果詳細用のカードを作る
   for(let i=0; i<selids.length; i++){
-    var cont_dat = cont_list[selids[i]];
-    var cont_card = make_card(cont_list[selids[i]]);
+    var cont_dat = cont_list[selids[i]]; // コンテンツデータ
+    var cont_card = make_card(cont_list[selids[i]]); // コンテンツカード
+    cont_card.setAttribute('style', 'width: 40%; display: inline-block'); // カードスタイル
     
+    // カードに属性データを追加
     var atts_list = document.createElement('ul');
     atts_list.setAttribute('class', 'list-group list-group-flush');
     for(let j=0; j<Object.keys(cont_dat.atts).length; j++){
@@ -182,6 +185,7 @@ function make_card_obj(data){
   // カードを作成
   var card = make_card(data);
   card.setAttribute('id', data.id); // idを追加
+  card.setAttribute('style', 'width: 20%; display: inline-block'); // カードスタイル
   
   // カードにクリックイベントを追加
   card.onclick = function(){
